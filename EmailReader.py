@@ -4,8 +4,19 @@ password = 'renu123'
 imap_url = 'webmail.renu.ac.ug'
 
 #Where you want your attachments to be saved (ensure this directory exists) 
-attachment_dir = '/home/daniel/Attachments'
-
+#attachment_dir = '/home/daniel/Attachments'
+#attachment_dir = os.path.dirname('/home/daniel/Attachments')
+# define the name of the directory to be created
+os.chdir("/home/daniel")
+path = os.getcwd()
+print("The current directory is %s "%path)
+attachment_dir = os.path.join(path,'Attachments')
+try:  
+    os.mkdir(attachment_dir)
+except OSError:  
+    print ("Creation of the directory %s failed" % attachment_dir)
+else:  
+    print ("Successfully created the directory %s " % attachment_dir)
 # sets up the authentication
 def auth(user,password,imap_url):
     con = imaplib.IMAP4_SSL(imap_url)
