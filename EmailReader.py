@@ -1,10 +1,11 @@
-import imaplib, email, os, datetime, time
+import imaplib, email, os,time, zipfile
+user = 'cert@renu.ac.ug'
+password = 'renu123'
+imap_url = 'webmail.renu.ac.ug'
 
-user = 'danielkawuma@gmail.com'
-password = 'O7o5o33411'
-imap_url = 'imap.gmail.com'
 #Where you want your attachments to be saved (ensure this directory exists) 
-attachment_dir = '/home/renu/Attachments'
+attachment_dir = '/home/daniel/Attachments'
+
 # sets up the authentication
 def auth(user,password,imap_url):
     con = imaplib.IMAP4_SSL(imap_url)
@@ -24,12 +25,11 @@ def get_attachments(msg):
         if part.get('Content-Disposition') is None:
             continue
         fileName = part.get_filename()
-
         if bool(fileName):
             filePath = os.path.join(attachment_dir, fileName)
             with open(filePath,'wb') as f:
                 f.write(part.get_payload(decode=True))
-
+	
 #extracts emails from byte array
 def get_emails(result_bytes):
     msgs = []
@@ -39,23 +39,14 @@ def get_emails(result_bytes):
     return msgs
 
 con = auth(user,password,imap_url)
-con.select('INBOX')
-# result, data = con.search(None,'ALL')
-
-# result, data = con.search(None, 'ALL')
-# result, data = con.search(None,'(SINCE today)')
+con.select('ShadowServer')
 
 result, data = con.search(None, "(ON {0})".format( time.strftime("%d-%b-%Y")))
+#result, data = con.search(None,'ALL')
 ids = data[0]
 id_list = ids.split()
 print(id_list)
 
-latest_email_id = int( id_list[-1])
-
-
-
-# result, data = con.fetch(b'10','(RFC822)')
-# for email_id in range(latest_email_id,(latest_email_id-latest_email_id),-1):
 for email_id in id_list:
     result, data = con.fetch(email_id,'(RFC822)')
 
@@ -63,10 +54,5 @@ for email_id in id_list:
     # print(get_body(raw))
     get_attachments(raw)
 
-# raw = email.message_from_string(data[0][1])
-# print get_body(raw)
-# get_attachments(raw)
-
-# close server connection
 con.close()
 con.logout()
