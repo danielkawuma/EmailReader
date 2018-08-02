@@ -7,7 +7,7 @@ imap_url = 'webmail.renu.ac.ug'
 #attachment_dir = '/home/daniel/Attachments'
 #attachment_dir = os.path.dirname('/home/daniel/Attachments')
 # define the name of the directory to be created
-os.chdir("/home/daniel")
+os.chdir("/home/systems")
 path = os.getcwd()
 print("The current directory is %s "%path)
 attachment_dir = os.path.join(path,'Attachments')
